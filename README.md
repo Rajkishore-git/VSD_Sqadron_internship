@@ -84,6 +84,25 @@ If we count the number of instructions again, we find a total of 11 instructions
 
 
 </details>
+<summary><b>Task 1:</b> RISC-v spike simulation</summary> 
+# RISC-V Project
+
+## About Spike
+Spike is the official RISC-V ISA (Instruction Set Architecture) simulator and a reference implementation for RISC-V processors. It is an open-source, cycle-accurate simulator that models the execution of RISC-V instructions on a virtual machine. 
+
+Spike is primarily used for:
+
+- **Testing and Validation**: It helps test and validate RISC-V hardware implementations without the need for actual hardware.
+- **Debugging**: Provides a platform for debugging and troubleshooting RISC-V programs.
+- **Software Development**: Developers can use Spike to run and debug RISC-V programs in a simulated environment.
+
+Spike simulates various aspects of a RISC-V processor, including:
+
+- Different privilege levels (user, supervisor, and machine modes)
+- Memory access and control flow
+- Supports various RISC-V extensions, offering flexibility for different system configurations.
+
+By providing an accurate simulation of RISC-V behavior, Spike serves as a valuable tool for both hardware and software development in the RISC-V ecosystem.
 
 
 
