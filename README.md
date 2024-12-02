@@ -240,7 +240,7 @@ debugger:
 <details>
 <summary><b>Task 3:</b> Types of instructions in RISC-V</summary> 
 
-### Introduction  
+## Introduction  
 
 - **RISC-V Base ISA Instruction Formats**  
   - The base RV32I ISA includes four core instruction formats: **R**, **I**, **S**, and **U**.  
@@ -270,7 +270,7 @@ debugger:
   - Immediate bits are optimized for hardware simplicity, even if they require cross-format rearrangement.  
   - The design prioritizes simplicity and hardware efficiency over including features like zero-extension for certain immediates.  
 
-### Types of instructions in RISC-V
+## Types of instructions in RISC-V
 ![image](https://github.com/user-attachments/assets/86c9a01e-32e3-4cc5-ad86-df57d8840e7d)
 
 The image illustrates the following RISC-V instruction formats:  
@@ -503,9 +503,286 @@ The **J-Type** format is used for **jump instructions**, specifically for transf
 The 20-bit immediate offset is constructed as follows:  
 1. Concatenate `imm[20]`, `imm[10:1]`, `imm[11]`, and `imm[19:12]`.  
 2. Left-shift the immediate by 1 bit (to align with 2-byte instruction boundaries).  
-3. Add the offset to the program counter (PC) to compute the jump target address.  
+3. Add the offset to the program counter (PC) to compute the jump target address.
 
-  
+## Identifing instructions from the application code (7seg-decoder.c)
+![scr2 5 (2)](https://github.com/user-attachments/assets/31c3ee0c-bb75-4e2e-ba9d-92fee4b03754)
+ 
+---
+
+### 1. **`addi sp, sp, -16`**
+*Add Immediate:* Adds an immediate value to a source register and stores the result in the destination register. 
+- **Format:** I-type
+- **Opcode:** `0010011` (7 bits)  
+- **Immediate:** `-16` (`1111111111110000` in two's complement, 12 bits)  
+- **Destination Register (rd):** `sp` (x2, 5 bits)  
+- **Source Register (rs1):** `sp` (x2, 5 bits)  
+- **Function (funct3):** `000` (3 bits)  
+
+#### Breakdown:  
+- Immediate: `1111111111110000` split into imm[11:0] = `1111111111110000`  
+- rd (sp = x2): `00010`  
+- rs1 (sp = x2): `00010`  
+- funct3: `000`  
+- Opcode: `0010011`  
+
+#### Binary Representation:  
+`1111111111110000 00010 000 00010 0010011`  
+
+---
+
+### 2. **`sd ra, 8(sp)`**
+*Store Doubleword:* Stores a 64-bit value from a source register into memory. 
+**Format:** S-type
+- **Opcode:** `0100011` (7 bits)  
+- **Immediate:** `8` (`0000000001000`, 12 bits split into imm[11:5] and imm[4:0])  
+- **Source Register (rs2):** `ra` (x1, 5 bits)  
+- **Base Register (rs1):** `sp` (x2, 5 bits)  
+- **Function (funct3):** `011` (3 bits)  
+
+#### Breakdown:  
+- imm[11:5]: `0000000`  
+- rs2 (ra = x1): `00001`  
+- rs1 (sp = x2): `00010`  
+- funct3: `011`  
+- imm[4:0]: `01000`  
+- Opcode: `0100011`  
+
+#### Binary Representation:  
+`0000000 00001 00010 011 01000 0100011`  
+
+---
+
+### 3. **`auipc a1, 1952`**
+*Add Upper Immediate to PC:* Adds an upper 20-bit immediate to the PC and stores it in the destination register.  
+**Format:** U-type
+- **Opcode:** `0010111` (7 bits)  
+- **Immediate:** `1952` (`000000011110` shifted left by 12 bits, 20 bits total)  
+- **Destination Register (rd):** `a1` (x11, 5 bits)  
+
+#### Breakdown:  
+- imm[31:12]: `0000000000000111`  
+- rd (a1 = x11): `01011`  
+- Opcode: `0010111`  
+
+#### Binary Representation:  
+`0000000000000111 01011 0010111`  
+
+---
+
+### 4. **`jal ra, 1040c`**
+*Jump and Link:* Saves the address of the next instruction in a register and jumps to a target address.  
+- **Format:** J-type
+- **Opcode:** `1101111` (7 bits)  
+- **Immediate:** `1040c` (`0000010000001100`, split into parts)  
+- **Destination Register (rd):** `ra` (x1, 5 bits)  
+
+#### Breakdown:  
+- imm[20]: `0`  
+- imm[10:1]: `0000001100`  
+- imm[11]: `0`  
+- imm[19:12]: `00000100`  
+- rd (ra = x1): `00001`  
+- Opcode: `1101111`  
+
+#### Binary Representation:  
+`00000100 0000001100 0 00001 1101111`  
+
+---
+
+### 5. **`mv a1, a0`** *(Pseudo-instruction for `addi`)*
+- **Format:** Same as `addi`, with `a1 = a0 + 0`. (I-type)  
+
+#### Breakdown: 
+- Immediate: `0`  
+- rd (a1 = x11): `01011`  
+- rs1 (a0 = x10): `01010`  
+- funct3: `000`  
+- Opcode: `0010011`  
+
+#### Binary Representation:  
+`000000000000 01010 000 01011 0010011`  
+
+---
+
+### 6. **`li a0, 33`** *(Pseudo-instruction for `addi`)*
+- **Format:** Same as `addi`, with `a0 = 33`. (I-type) 
+
+#### Breakdown:  
+- Immediate: `33` (`000000100001`)  
+- rd (a0 = x10): `01010`  
+- rs1 (x0): `00000`  
+- funct3: `000`  
+- Opcode: `0010011`  
+
+#### Binary Representation:  
+`000000100001 00000 000 01010 0010011`  
+
+---
+
+### 7. **`ret`** *(Pseudo-instruction for `jalr`)*
+- **Format:** Same as `jalr` with `rs1 = ra` and `imm = 0`. (I-type) 
+
+#### Breakdown:  
+- rd: `00000` (x0)  
+- rs1: `00001` (ra)  
+- funct3: `000`  
+- imm: `0`  
+- Opcode: `1100111`  
+
+#### Binary Representation:  
+`000000000000 00001 000 00000 1100111`  
+
+---
+
+### 8. **`ld a5, 8(a0)`**
+*Load Doubleword:* Loads a 64-bit value from memory into a register.
+- **Format:** J-type
+- **Opcode:** `0000011` (7 bits)  
+- **Immediate:** `8` (`0000000001000`, 12 bits split into imm[11:0])  
+- **Destination Register (rd):** `a5` (x15, 5 bits)  
+- **Base Register (rs1):** `a0` (x10, 5 bits)  
+- **Function (funct3):** `011` (3 bits)  
+
+#### Breakdown:  
+- imm[11:0]: `000000001000`  
+- rd (a5 = x15): `01111`  
+- rs1 (a0 = x10): `01010`  
+- funct3: `011`  
+- Opcode: `0000011`  
+
+#### Binary Representation:  
+`000000001000 01010 011 01111 0000011`  
+
+---
+
+### 9. **`beqz a5, 1ff4`**
+*Branch if Equal to Zero (Pseudo-instruction for `beq`):* Branches if a register equals zero. 
+- **Format:** B-type
+- **Opcode:** `1100011` (7 bits)  
+- **Immediate:** `1ff4` (`0001111111110100`, split into imm[12|10:5|4:1|11] order)  
+- **Source Register 1 (rs1):** `a5` (x15, 5 bits)  
+- **Source Register 2 (rs2):** `x0` (always zero, 5 bits)  
+- **Function (funct3):** `000` (3 bits)  
+
+#### Breakdown:  
+- imm[12]: `0`  
+- imm[10:5]: `011111`  
+- rs1 (a5 = x15): `01111`  
+- rs2 (x0): `00000`  
+- funct3: `000`  
+- imm[4:1]: `1010`  
+- imm[11]: `1`  
+- Opcode: `1100011`  
+
+#### Binary Representation:  
+`0 011111 01111 00000 000 1010 1 1100011`  
+
+---
+
+### 10. **`lui gp, 1952`**
+*Load Upper Immediate:* Loads a 20-bit immediate value into the upper 20 bits of a register.  
+- **Format:** R-type
+- **Opcode:** `0110111` (7 bits)  
+- **Immediate:** `1952` (`000000011110` shifted left by 12 bits, 20 bits total)  
+- **Destination Register (rd):** `gp` (x3, 5 bits)  
+
+#### Breakdown:  
+- imm[31:12]: `000000011110`  
+- rd (gp = x3): `00011`  
+- Opcode: `0110111`  
+
+#### Binary Representation:  
+`000000011110 00011 0110111`  
+
+---
+
+### 11. **`add a0, a0, a5`**
+*Add:* Adds two registers and stores the result in the destination register.  
+- **Format:** R-type
+- **Opcode:** `0110011` (7 bits)  
+- **Destination Register (rd):** `a0` (x10, 5 bits)  
+- **Source Register 1 (rs1):** `a0` (x10, 5 bits)  
+- **Source Register 2 (rs2):** `a5` (x15, 5 bits)  
+- **Function (funct3):** `000` (3 bits)  
+- **Function (funct7):** `0000000` (7 bits)  
+
+#### Breakdown:  
+- funct7: `0000000`  
+- rs2 (a5 = x15): `01111`  
+- rs1 (a0 = x10): `01010`  
+- funct3: `000`  
+- rd (a0 = x10): `01010`  
+- Opcode: `0110011`  
+
+#### Binary Representation:  
+`0000000 01111 01010 000 01010 0110011`  
+
+---
+
+### 12. **`jalr zero, 0(ra)`**
+*Jump and Link Register:* Saves the address of the next instruction into the destination register and jumps to the target address. 
+- **Format:** I-type
+- **Opcode:** `1100111` (7 bits)  
+- **Immediate:** `0` (`000000000000`, 12 bits)  
+- **Destination Register (rd):** `zero` (x0, 5 bits)  
+- **Base Register (rs1):** `ra` (x1, 5 bits)  
+- **Function (funct3):** `000` (3 bits)  
+
+#### Breakdown:  
+- imm[11:0]: `000000000000`  
+- rd (zero = x0): `00000`  
+- rs1 (ra = x1): `00001`  
+- funct3: `000`  
+- Opcode: `1100111`  
+
+#### Binary Representation:  
+`000000000000 00001 000 00000 1100111`  
+
+---
+
+### 13. **`jal zero, 12dfc`**
+*Jump and Link:* Similar to `jalr`, except the immediate is used as a direct offset.  
+- **Format:** j-type
+- **Opcode:** `1101111` (7 bits)  
+- **Immediate:** `12dfc` (split across imm[20|10:1|11|19:12]).  
+
+#### Breakdown:  
+- imm[20]: `0`  
+- imm[10:1]: `1011111100`  
+- imm[11]: `1`  
+- imm[19:12]: `00010010`  
+- rd (zero = x0): `00000`  
+- Opcode: `1101111`  
+
+#### Binary Representation:  
+`00010010 1011111100 1 00000 1101111`  
+
+---
+
+### 14. **`call_exitprocs`** *(Pseudo-instruction calling another function)*  
+This pseudo-instruction expands into `jal` with a target offset. 
+- **Format:** j-type
+- **Opcode:** `1101111`  
+- Immediate and target would be calculated based on the address of `exitprocs`.  
+
+---
+
+### 15. **`li t0, 1`** *(Pseudo-instruction for `addi`)*
+- **Format:** Same as `addi`, with `t0 = 1`. (I-type) 
+
+#### Breakdown:  
+- Immediate: `1` (`000000000001`)  
+- rd (t0 = x5): `00101`  
+- rs1 (x0): `00000`  
+- funct3: `000`  
+- Opcode: `0010011`  
+
+#### Binary Representation:  
+`000000000001 00000 000 00101 0010011`  
+
+---
+
 
 
 
