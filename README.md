@@ -270,7 +270,185 @@ debugger:
   - Immediate bits are optimized for hardware simplicity, even if they require cross-format rearrangement.  
   - The design prioritizes simplicity and hardware efficiency over including features like zero-extension for certain immediates.  
 
-This structure ensures that RISC-V remains **scalable**, **simple**, and **debug-friendly** while maintaining hardware efficiency.  
+### Types of instructions in RISC-V
+![image](https://github.com/user-attachments/assets/86c9a01e-32e3-4cc5-ad86-df57d8840e7d)
+
+The image illustrates the following RISC-V instruction formats:  
+- **R-Type**: Used for register-to-register operations.  
+- **I-Type**: Used for immediate-based instructions, including loads.  
+- **S-Type**: Used for store instructions.  
+- **B-Type**: Used for conditional branch instructions.  
+- **U-Type**: Used for upper immediate instructions like LUI.  
+- **J-Type**: Used for jump instructions like JAL.  
+## R-Type  
+
+![image](https://github.com/user-attachments/assets/a617b8f1-7bd0-4ddf-bada-4d3b9a07b08b)
+
+The **R-Type** format is used for register-to-register operations, such as arithmetic, logical, and shift instructions. Its structure is detailed below:  
+
+- **[31:25] (funct7)**:  
+  - A 7-bit field providing additional instruction-specific information.  
+  - Differentiates variations of operations within the same category (e.g., `ADD` vs. `SUB`, which share the same `opcode` and `funct3` but differ in `funct7`).  
+  - Common examples:  
+    - `0000000` for `ADD` and `SLL`.  
+    - `0100000` for `SUB` and other reverse operations.  
+
+- **[24:20] (rs2)**:  
+  - Specifies the second source register (5 bits).  
+  - Used in operations requiring two input registers, such as `ADD`, `SUB`, or logical AND/OR.  
+
+- **[19:15] (rs1)**:  
+  - Specifies the first source register (5 bits).  
+  - Works with `rs2` to provide inputs for the operation.  
+
+- **[14:12] (funct3)**:  
+  - A 3-bit field specifying the operation category.  
+  - Works alongside `opcode` and `funct7` to identify the exact instruction.  
+  - Examples:  
+    - `000` for addition (`ADD`) or subtraction (`SUB`).  
+    - `111` for bitwise AND.  
+    - `100` for bitwise XOR.  
+  - Encodes operation variants, especially when multiple operations share the same `opcode`.  
+
+- **[11:7] (rd)**:  
+  - Specifies the destination register (5 bits).  
+  - The result of the operation is stored in this register.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the broad instruction type.  
+  - Indicates that the instruction uses the R-Type format.  
+  - Examples:  
+    - `0110011` for most register-based arithmetic and logical operations.  
+  - Combined with `funct3` and `funct7` to uniquely identify the instruction.
+
+### I-Type
+
+The **I-Type** format is used for instructions that involve immediate values, such as loads, arithmetic operations with immediates, and system calls. Its structure is detailed below:  
+![image](https://github.com/user-attachments/assets/7552d082-3ad9-4a79-8442-4aa32956bfe7)
+
+- **[31:20] (imm[11:0])**:  
+  - A 12-bit field that contains the immediate value.  
+  - The value is sign-extended to fit the operation's requirements.  
+  - Commonly used as:  
+    - A direct operand in arithmetic instructions (e.g., `ADDI`, `SLTI`).  
+    - An offset in memory access instructions (e.g., `LW`, `LH`).  
+
+- **[19:15] (rs1)**:  
+  - Specifies the source register (5 bits).  
+  - Provides the base register in memory load instructions or the operand in immediate arithmetic instructions.  
+
+- **[14:12] (funct3)**:  
+  - A 3-bit field specifying the operation category.  
+  - Works alongside `opcode` to identify the exact instruction.  
+  - Examples:  
+    - `000` for `ADDI` (add immediate).  
+    - `010` for `SLTI` (set less than immediate).  
+    - `011` for `SLTIU` (set less than immediate unsigned).  
+    - `100` for bitwise XOR immediate (`XORI`).  
+  - Encodes operation variants within the same instruction class.  
+
+- **[11:7] (rd)**:  
+  - Specifies the destination register (5 bits).  
+  - The result of the operation or the loaded value is stored in this register.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the instruction type.  
+  - Indicates that the instruction uses the I-Type format.  
+  - Examples:  
+    - `0010011` for arithmetic operations with immediates.  
+    - `0000011` for memory load instructions.  
+    - `1110011` for system calls (e.g., `ECALL`).  
+  - Combined with `funct3` to specify the instruction’s behavior.  
+
+### Summary of Fields in I-Type Format:  
+- **`opcode`**: Defines the instruction type and category (e.g., load, immediate arithmetic, or system calls).  
+- **`funct3`**: Specifies the sub-operation (e.g., `ADDI`, `SLTI`).  
+- **Immediate (`imm[11:0]`)**: Encodes an offset or operand directly in the instruction.
+
+### S-Type Format  
+
+The **S-Type** format is used for **store instructions**, where data from a source register is written to a memory location. Its structure is detailed below:  
+![image](https://github.com/user-attachments/assets/92e1e7ef-0047-4ee9-81d0-c3f563769207)
+
+- **[31:25] (imm[11:5])**:  
+  - The upper 7 bits of the immediate value.  
+  - Combined with `imm[4:0]` (from bits [11:7]) to form the full 12-bit immediate.  
+  - Used as an offset in memory addressing.  
+
+- **[24:20] (rs2)**:  
+  - Specifies the second source register (5 bits).  
+  - Contains the value to be stored in memory at the computed address.  
+
+- **[19:15] (rs1)**:  
+  - Specifies the first source register (5 bits).  
+  - Provides the base address for the memory operation.  
+
+- **[14:12] (funct3)**:  
+  - A 3-bit field defining the operation category.  
+  - Specifies the type of store instruction.  
+  - Examples:  
+    - `000` for `SB` (store byte).  
+    - `001` for `SH` (store halfword).  
+    - `010` for `SW` (store word).  
+
+- **[11:7] (imm[4:0])**:  
+  - The lower 5 bits of the immediate value.  
+  - Combined with `imm[11:5]` to form the full 12-bit immediate.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the instruction type.  
+  - Indicates that the instruction is of the S-Type format.  
+  - Example:  
+    - `0100011` for store instructions (`SB`, `SH`, `SW`).  
+  - Works with `funct3` to determine the specific instruction.  
+### B-Type Format  
+
+The **B-Type** format is used for **branch instructions**, which control the program's flow based on conditional evaluations. Its structure is detailed below:  
+![image](https://github.com/user-attachments/assets/c245626c-38dc-41ea-93d7-c165ba0080db)
+
+- **[31] (imm[12])**:  
+  - The most significant bit of the immediate value.  
+  - Used for sign-extension to compute the target branch address.  
+
+- **[30:25] (imm[10:5])**:  
+  - Part of the 12-bit immediate value.  
+  - Combined with other immediate bits to determine the branch offset.  
+
+- **[24:20] (rs2)**:  
+  - Specifies the second source register (5 bits).  
+  - Provides the second operand for the branch condition.  
+
+- **[19:15] (rs1)**:  
+  - Specifies the first source register (5 bits).  
+  - Provides the first operand for the branch condition.  
+
+- **[14:12] (funct3)**:  
+  - A 3-bit field specifying the branch condition.  
+  - Examples:  
+    - `000` for `BEQ` (branch if equal).  
+    - `001` for `BNE` (branch if not equal).  
+    - `100` for `BLT` (branch if less than).  
+    - `101` for `BGE` (branch if greater than or equal).  
+
+- **[11] (imm[11])**:  
+  - A bit from the immediate value, used in computing the branch target address.  
+
+- **[10:1] (imm[4:1])**:  
+  - Part of the immediate value, forming the middle portion of the branch offset.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the instruction type.  
+  - Indicates that the instruction is of the B-Type format.  
+  - Example:  
+    - `1100011` for all branch instructions (`BEQ`, `BNE`, `BLT`, etc.).  
+
+#### Immediate Field Combination  
+The immediate field in B-Type instructions is assembled as follows:  
+- Concatenate `imm[12]`, `imm[10:5]`, `imm[4:1]`, and `imm[11]`.  
+- The full immediate is then left-shifted by 1 to compute the branch offset (since branch targets must align with 2-byte boundaries).  
+
+
+
 
 
 
