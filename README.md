@@ -236,6 +236,42 @@ debugger:
 12. **`ret` (Instruction at `101b0`)**:  
     - Returns from the function by jumping to the address stored in `ra`.
 
+</details>
+<details>
+<summary><b>Task 3:</b> Types of instructions in RISC-V</summary> 
+
+### Introduction  
+
+- **RISC-V Base ISA Instruction Formats**  
+  - The base RV32I ISA includes four core instruction formats: **R**, **I**, **S**, and **U**.  
+  - All instructions are fixed at **32 bits** in length.  
+  - Instructions must be **aligned on a four-byte boundary** in memory (`IALIGN=32`).  
+
+- **Instruction Alignment**  
+  - Misaligned instructions trigger an **instruction-address-misaligned exception** during taken branches or jumps.  
+  - Exceptions are reported on the misaligned branch/jump instruction, not the target instruction.  
+  - When extensions with 16-bit instruction lengths are added, alignment relaxes to a **two-byte boundary** (`IALIGN=16`).  
+
+- **Handling Reserved Instructions**  
+  - Behavior for decoding reserved instructions is **unspecified**.  
+  - Platforms may:  
+    - Raise an **illegal-instruction exception** for reserved standard opcodes.  
+    - Permit non-conforming extensions using reserved opcode spaces.  
+
+- **Register and Immediate Design**  
+  - Source (`rs1` and `rs2`) and destination (`rd`) registers are **uniformly positioned** across all formats to simplify decoding.  
+  - Immediates:  
+    - Are **sign-extended** for simplicity and efficiency.  
+    - Positioned to minimize hardware complexity, with the sign bit always at **bit 31**.  
+    - Include a 12-bit immediate field for regular instructions and a 20-bit field for **load-upper-immediate** (LUI) instructions.  
+
+- **Design Principles**  
+  - Register specifiers are consistent across formats to reduce critical path delays.  
+  - Immediate bits are optimized for hardware simplicity, even if they require cross-format rearrangement.  
+  - The design prioritizes simplicity and hardware efficiency over including features like zero-extension for certain immediates.  
+
+This structure ensures that RISC-V remains **scalable**, **simple**, and **debug-friendly** while maintaining hardware efficiency.  
+
 
 
 
