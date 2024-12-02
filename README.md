@@ -282,9 +282,8 @@ The image illustrates the following RISC-V instruction formats:
 - **J-Type**: Used for jump instructions like JAL.  
 ## R-Type  
 
-![image](https://github.com/user-attachments/assets/a617b8f1-7bd0-4ddf-bada-4d3b9a07b08b)
-
 The **R-Type** format is used for register-to-register operations, such as arithmetic, logical, and shift instructions. Its structure is detailed below:  
+![image](https://github.com/user-attachments/assets/a617b8f1-7bd0-4ddf-bada-4d3b9a07b08b)
 
 - **[31:25] (funct7)**:  
   - A 7-bit field providing additional instruction-specific information.  
@@ -445,7 +444,69 @@ The **B-Type** format is used for **branch instructions**, which control the pro
 #### Immediate Field Combination  
 The immediate field in B-Type instructions is assembled as follows:  
 - Concatenate `imm[12]`, `imm[10:5]`, `imm[4:1]`, and `imm[11]`.  
-- The full immediate is then left-shifted by 1 to compute the branch offset (since branch targets must align with 2-byte boundaries).  
+- The full immediate is then left-shifted by 1 to compute the branch offset (since branch targets must align with 2-byte boundaries).
+
+### U-Type
+
+The **U-Type** format is used for instructions that require a large immediate value, typically for constructing addresses or performing arithmetic operations on upper bits. Its structure is detailed below:
+![image](https://github.com/user-attachments/assets/8647a772-3078-44f3-9693-4e6d0780440b)
+
+- **[31:12] (imm[31:12])**:  
+  - A 20-bit immediate value.  
+  - Stored in the upper 20 bits of the destination register.  
+  - The lower 12 bits of the destination register are filled with zeros.  
+  - Commonly used for:  
+    - Loading upper 20 bits into a register (`LUI`).  
+    - Adjusting addresses or constants (`AUIPC`).
+
+- **[11:7] (rd)**:  
+  - Specifies the destination register (5 bits).  
+  - The result of the instruction is stored in this register.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the instruction type.  
+  - Examples:  
+    - `0110111` for `LUI` (Load Upper Immediate).  
+    - `0010111` for `AUIPC` (Add Upper Immediate to PC).  
+  - Combined with the `imm[31:12]` field to determine the operation.
+
+### J-Type
+
+
+The **J-Type** format is used for **jump instructions**, specifically for transferring program control to a specified target address with a 20-bit immediate offset. It supports unconditional jumps while optionally storing the return address in a register. Its structure is detailed below:  
+![image](https://github.com/user-attachments/assets/02d89bd7-430b-40e3-b9f5-af9a0618dc17)
+
+- **[31] (imm[20])**:  
+  - The most significant bit of the 20-bit immediate value.  
+  - Used for sign-extension when calculating the jump target address.  
+
+- **[30:21] (imm[10:1])**:  
+  - Part of the immediate value, forming the middle portion of the jump offset.  
+
+- **[20] (imm[11])**:  
+  - A bit of the immediate value, included in the target offset calculation.  
+
+- **[19:12] (imm[19:12])**:  
+  - The upper 8 bits of the immediate value, contributing to the jump offset.  
+
+- **[11:7] (rd)**:  
+  - Specifies the destination register (5 bits).  
+  - Stores the return address (the address of the next instruction) when the jump is executed.  
+  - If `rd` is set to `x0`, no return address is stored.  
+
+- **[6:0] (opcode)**:  
+  - A 7-bit field identifying the instruction type.  
+  - Example:  
+    - `1101111` for `JAL` (Jump and Link).  
+
+#### Immediate Field Combination  
+The 20-bit immediate offset is constructed as follows:  
+1. Concatenate `imm[20]`, `imm[10:1]`, `imm[11]`, and `imm[19:12]`.  
+2. Left-shift the immediate by 1 bit (to align with 2-byte instruction boundaries).  
+3. Add the offset to the program counter (PC) to compute the jump target address.  
+
+  
+
 
 
 
