@@ -986,7 +986,9 @@ This section will integrate the commands for running and simulating your Verilog
                                                           
 ---
 
-### Instruction Encodings
+### Functional simulation
+![ev 1](https://github.com/user-attachments/assets/f0532e2c-7fc2-44e7-a810-2f4bd65deea1)
+
 
 #### Instruction 1: ADD R6, R1, R2  
 
@@ -1206,7 +1208,7 @@ This section will integrate the commands for running and simulating your Verilog
 - Hardcoded: `MEM[6] <= 32'h00520600;`  
 - Standard RISC-V ISA: `0x00520013`  
 
-
+---
 
 #### Instruction 8: BEQ R0, R0, 15 
 
@@ -1237,21 +1239,21 @@ This section will integrate the commands for running and simulating your Verilog
 
 - Hardcoded: `MEM[9] <= 32'h00F00002;`  
 - Standard RISC-V ISA: `0x00F00063`  
-
+---
 
 #### Instruction 9: BNE R0, R1, 20  
-
+---
 1. **Program Counter (PC):** Tracks the address of the current instruction being executed.
 2. **Instruction Behavior:**  
    - The **BNE** (Branch if Not Equal) instruction checks the values stored in two registers (`R0` and `R1` in this case).  
    - If the values in the two registers are not equal, the PC is incremented by the immediate value provided in the instruction (20 in this case).  
    - Here, the initial PC value is 11. After execution, since `R0` ≠ `R1`, the PC is updated to `10 + 11 = 31`.
-   
+---
 ![hd 1](https://github.com/user-attachments/assets/96d392ac-ffdd-4679-b304-3a7236e3a5d1)
 
 - Hardcoded: `MEM[27] <= 32'h01409002;`  
 - Standard RISC-V ISA: `0x01408063`  
-
+---
 
 #### Instruction 15: SRL R16, R14, R2  
 
