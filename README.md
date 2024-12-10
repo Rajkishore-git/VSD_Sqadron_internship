@@ -785,7 +785,7 @@ This pseudo-instruction expands into `jal` with a target offset.
 
 </details>
 <details>
-<summary><b>Task 4:</b> Risc-V iverilog functional dimulation using gtkwave</summary> 
+<summary><b>Task 4:</b> Risc-V iverilog functional simulation using gtkwave</summary> 
 
 ### Installing Icarus Verilog and GTKWave
 
