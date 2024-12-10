@@ -785,7 +785,7 @@ This pseudo-instruction expands into `jal` with a target offset.
 
 </details>
 <details>
-<summary><b>Task 2:</b> RISC-v spike simulation</summary> 
+<summary><b>Task 2:</b> Risc-V iverilog functional dimulation using gtkwave</summary> 
 
 ### Installing Icarus Verilog and GTKWave
 
@@ -982,7 +982,6 @@ This section will integrate the commands for running and simulating your Verilog
 | `beq r0,r0,15`   | Branch if Equal             | `0x00F00002`                      | `0x00F00063`                        |
 | `add r14,r2,r2`  | Addition of `r2` and `r2`   | `0x00210700`                      | `0x00210133`                        |
 | `bne r0,r1,20`   | Branch if Not Equal         | `0x01409002`                      | `0x01409063`                        |
-| `sll r15,r1,r2`  | Shift Left Logical          | `0x00208783`                      | `0x00209033`                        |
 | `srl r16,r14,r2` | Shift Right Logical         | `0x00271803`                      | `0x00271033`                        |
                                                           
 ---
@@ -990,6 +989,31 @@ This section will integrate the commands for running and simulating your Verilog
 ### Instruction Encodings
 
 #### Instruction 1: ADD R6, R1, R2  
+
+
+---
+
+1. **Instruction Details:**  
+   - The **ADD** instruction adds the values of two registers (`ID_EX_A` and `ID_EX_B`) and stores the result in the destination register.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `1`.  
+   - The value in `ID_EX_B` is `2`.
+
+3. **Output of ADD Operation:**  
+   - The result of adding `1 + 2` is `3`, which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the ADD operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R1`).  
+   - **ID_EX_B:** Represents the second operand (`R2`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R3`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the ADD instruction.
+
+--- 
+
 ![WhatsApp Image 2024-12-10 at 16 06 54_21d28469](https://github.com/user-attachments/assets/3786c6f0-49ac-4488-8693-d155a6ab0db2)
 
 - Hardcoded: `MEM[0] <= 32'h02208300;`  
@@ -997,7 +1021,30 @@ This section will integrate the commands for running and simulating your Verilog
 
 ---
 
-#### Instruction 2: SUB R7, R1, R2  
+#### Instruction 2: SUB R7, R1, R2 
+
+---
+
+1. **Instruction Details:**  
+   - The **SUB** instruction subtracts the value of `ID_EX_B` from `ID_EX_A` and stores the result in the destination register.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `1`.  
+   - The value in `ID_EX_B` is `2`.
+
+3. **Output of SUB Operation:**  
+   - The result of subtracting `1 - 2` is `-1`, which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the SUB operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R1`).  
+   - **ID_EX_B:** Represents the second operand (`R2`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R3`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the SUB instruction.
+
+--- 
 ![WhatsApp Image 2024-12-10 at 16 06 55_c8ca0db7](https://github.com/user-attachments/assets/a648cdd5-f93a-4acb-893e-88eb4f9689d9)
 
 - Hardcoded: `MEM[1] <= 32'h02209380;`  
@@ -1006,6 +1053,30 @@ This section will integrate the commands for running and simulating your Verilog
 ---
 
 #### Instruction 3: AND R8, R1, R3  
+
+---
+
+1. **Instruction Details:**  
+   - The **AND** instruction performs a bitwise AND operation between the values of `ID_EX_A` and `ID_EX_B`, and stores the result in the destination register.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `3` (binary: `11`).  
+   - The value in `ID_EX_B` is `1` (binary: `01`).
+
+3. **Output of AND Operation:**  
+   - The result of the bitwise AND operation (`11 & 01`) is `01` (decimal: `1`), which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the AND operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R1`).  
+   - **ID_EX_B:** Represents the second operand (`R2`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R3`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the AND instruction.
+
+--- 
+
 ![WhatsApp Image 2024-12-10 at 16 06 55_826359e7](https://github.com/user-attachments/assets/8c5bf76e-5fc6-4c56-8ce7-474a10dd950c)
 
 - Hardcoded: `MEM[2] <= 32'h0230A400;`  
@@ -1014,6 +1085,31 @@ This section will integrate the commands for running and simulating your Verilog
 ---
 
 #### Instruction 4: OR R9, R2, R5  
+
+
+---
+
+1. **Instruction Details:**  
+   - The **OR** instruction performs a bitwise OR operation between the values of `ID_EX_A` and `ID_EX_B`, and stores the result in the destination register.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `2` (binary: `0010`).  
+   - The value in `ID_EX_B` is `5` (binary: `0101`).
+
+3. **Output of OR Operation:**  
+   - The result of the bitwise OR operation (`0010 | 0101`) is `0111` (decimal: `7`), which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the OR operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R1`).  
+   - **ID_EX_B:** Represents the second operand (`R2`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R3`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the OR instruction.
+
+---
+
 ![WhatsApp Image 2024-12-10 at 16 06 55_bc0771b1](https://github.com/user-attachments/assets/00dfedea-222a-4613-9a92-e04ae5730269)
 
 - Hardcoded: `MEM[3] <= 32'h02513480;`  
@@ -1022,6 +1118,29 @@ This section will integrate the commands for running and simulating your Verilog
 ---
 
 #### Instruction 5: XOR R10, R1, R4  
+
+---
+
+1. **Instruction Details:**  
+   - The **XOR** instruction performs a bitwise XOR operation between the values of `ID_EX_A` and `ID_EX_B`, and stores the result in the destination register.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `1` (binary: `0001`).  
+   - The value in `ID_EX_B` is `4` (binary: `0100`).
+
+3. **Output of XOR Operation:**  
+   - The result of the bitwise XOR operation (`0001 ^ 0100`) is `0101` (decimal: `5`), which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the XOR operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R1`).  
+   - **ID_EX_B:** Represents the second operand (`R4`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R10`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the XOR instruction.
+
+---
 ![WhatsApp Image 2024-12-10 at 16 06 56_815b24a1](https://github.com/user-attachments/assets/ec9cda52-d1d3-4ebd-b71b-894aba795aed)
 
 - Hardcoded: `MEM[4] <= 32'h0240C500;`  
@@ -1030,6 +1149,29 @@ This section will integrate the commands for running and simulating your Verilog
 ---
 
 #### Instruction 6: SLT R11, R2, R4  
+
+---
+
+1. **Instruction Details:**  
+   - The **SLT (Set Less Than)** instruction compares the values of `ID_EX_A` and `ID_EX_B`. If the value in `ID_EX_A` is less than the value in `ID_EX_B`, the result stored in the destination register is `1`; otherwise, it is `0`.
+
+2. **Values in Registers:**  
+   - The value in `ID_EX_A` is `2`.  
+   - The value in `ID_EX_B` is `4`.
+
+3. **Output of SLT Operation:**  
+   - Since `2 < 4`, the result of the SLT operation is `1`, which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the SLT operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the first operand (`R2`).  
+   - **ID_EX_B:** Represents the second operand (`R4`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R1`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the SLT instruction.
+
+---
 ![WhatsApp Image 2024-12-10 at 16 06 56_2e8ede74](https://github.com/user-attachments/assets/bc76799b-3bac-4b5a-ac96-fac5cd71407e)
 - Hardcoded: `MEM[5] <= 32'h02415580;`  
 - Standard RISC-V ISA: `0x00415033`  
@@ -1037,6 +1179,29 @@ This section will integrate the commands for running and simulating your Verilog
 ---
 
 #### Instruction 7: ADDI R12, R4, 5  
+
+---
+
+1. **Instruction Details:**  
+   - The **ADDI (Add Immediate)** instruction adds an immediate value to the value stored in a source register and stores the result in the destination register.
+
+2. **Values in Registers and Immediate Value:**  
+   - The value in the source register `ID_EX_B` is `4`.  
+   - The immediate value is `5`.
+
+3. **Output of ADDI Operation:**  
+   - The result of the addition (`4 + 5`) is `9`, which is stored in `EX_MEM_ALUOUT`.
+
+4. **Instruction Format:**  
+   - The **32-bit instruction** for the ADDI operation is represented in `EX_MEM_IR`, with the specific encoding for this operation.
+
+5. **Waveform Signals:**  
+   - **ID_EX_B:** Represents the source operand (`R4`).  
+   - **ID_EX_IMMEDIATE:** Represents the immediate value (`5`).  
+   - **EX_MEM_ALUOUT:** Stores the output result (`R12`).  
+   - **EX_MEM_IR:** Displays the hardcoded 32-bit ISA for the ADDI instruction.
+
+---
 ![WhatsApp Image 2024-12-10 at 16 06 57_74ac6199](https://github.com/user-attachments/assets/bd40a68d-d0cc-4cb1-8ddc-81f76b9f8f50)
 - Hardcoded: `MEM[6] <= 32'h00520600;`  
 - Standard RISC-V ISA: `0x00520013`  
@@ -1044,6 +1209,30 @@ This section will integrate the commands for running and simulating your Verilog
 
 
 #### Instruction 8: BEQ R0, R0, 15 
+
+
+---
+
+1. **Instruction Details:**  
+   - The *BEQ* (Branch if Equal) instruction checks if the values in two registers (R0 and R0 in this case) are equal. If they are, the program counter (PC) is updated by adding the immediate value specified in the instruction.
+
+2. **Values in Registers:**  
+   - The value stored in register R0 is `11`.
+
+3. **Branch Operation:**  
+   - Since the values in both registers (R0 and R0) are equal, the PC is incremented by the immediate value (15) provided in the instruction.  
+   - New PC value = `10` (previous PC) + `15` (immediate) = `25`.
+
+4. **Instruction Format:**  
+   - The *32-bit instruction* for the BEQ operation is represented in the EX_MEM_IR signal, with the opcode and immediate values encoded appropriately.
+
+5. **Waveform Signals:**  
+   - *Program Counter (PC):* Displays the current instruction address.  
+   - *EX_MEM_IR:* Represents the 32-bit encoded BEQ instruction.  
+   - *EX_MEM_ALUOUT:* Shows the updated PC value after the branch operation.  
+
+---
+
 ![WhatsApp Image 2024-12-10 at 16 25 02_89a3d534](https://github.com/user-attachments/assets/7333670e-d865-480c-8e97-a33668aa098d)
 
 - Hardcoded: `MEM[9] <= 32'h00F00002;`  
@@ -1051,13 +1240,39 @@ This section will integrate the commands for running and simulating your Verilog
 
 
 #### Instruction 9: BNE R0, R1, 20  
-![hd 1](https://github.com/user-attachments/assets/3ddd8a39-3d34-478b-a185-1e144e07ae8c)
+
+1. **Program Counter (PC):** Tracks the address of the current instruction being executed.
+2. **Instruction Behavior:**  
+   - The **BNE** (Branch if Not Equal) instruction checks the values stored in two registers (`R0` and `R1` in this case).  
+   - If the values in the two registers are not equal, the PC is incremented by the immediate value provided in the instruction (20 in this case).  
+   - Here, the initial PC value is 11. After execution, since `R0` ≠ `R1`, the PC is updated to `10 + 11 = 31`.
+   
+![hd 1](https://github.com/user-attachments/assets/96d392ac-ffdd-4679-b304-3a7236e3a5d1)
 
 - Hardcoded: `MEM[27] <= 32'h01409002;`  
 - Standard RISC-V ISA: `0x01408063`  
 
 
 #### Instruction 15: SRL R16, R14, R2  
+
+---
+
+
+1. **Instruction Details:**  
+   - The **SLL** (Shift Left Logical) instruction shifts the bits of the source register (`R1`) to the left by the number of positions specified in another register (`R2`).
+2. **Values in Registers:**  
+   - The value stored in `R1` is `1` (binary: `0001`).
+   - The amount of shift specified in `R2` is `2`.
+3. **Output of SLL:**  
+   - The output after shifting `0001` left by 2 positions is `0100` (decimal: `4`), as shown in `EX_MEM_ALUOUT`.
+4. **Instruction Format:** The **32-bit instruction** for `SLL R15, R1, R2` is highlighted in the waveform.
+5. **Waveform Signals:**  
+   - **ID_EX_A:** Represents the value to be shifted (`R1`).  
+   - **ID_EX_B:** Represents the shift amount (`R2`).  
+   - **EX_MEM_ALUOUT:** Represents the result of the shift operation.
+
+---
+
 ![hd2 1](https://github.com/user-attachments/assets/796d2b5c-559e-45a1-91cb-6f1f957f732e)
 
 - Hardcoded: `MEM[51] <= 32'h00271803;`  
