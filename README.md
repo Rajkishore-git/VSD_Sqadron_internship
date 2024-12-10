@@ -1255,7 +1255,7 @@ This section will integrate the commands for running and simulating your Verilog
 - Standard RISC-V ISA: `0x01408063`  
 ---
 
-#### Instruction 15: SRL R16, R14, R2  
+#### Instruction 10: SRL R16, R14, R2  
 
 ---
 
