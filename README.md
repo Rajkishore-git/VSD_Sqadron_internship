@@ -990,90 +990,76 @@ This section will integrate the commands for running and simulating your Verilog
 ### Instruction Encodings
 
 #### Instruction 1: ADD R6, R1, R2  
+![WhatsApp Image 2024-12-10 at 16 06 54_21d28469](https://github.com/user-attachments/assets/3786c6f0-49ac-4488-8693-d155a6ab0db2)
+
 - Hardcoded: `MEM[0] <= 32'h02208300;`  
 - Standard RISC-V ISA: `0x00208033`  
 
 ---
 
 #### Instruction 2: SUB R7, R1, R2  
+![WhatsApp Image 2024-12-10 at 16 06 55_c8ca0db7](https://github.com/user-attachments/assets/a648cdd5-f93a-4acb-893e-88eb4f9689d9)
+
 - Hardcoded: `MEM[1] <= 32'h02209380;`  
 - Standard RISC-V ISA: `0x40208033`  
 
 ---
 
 #### Instruction 3: AND R8, R1, R3  
+![WhatsApp Image 2024-12-10 at 16 06 55_826359e7](https://github.com/user-attachments/assets/8c5bf76e-5fc6-4c56-8ce7-474a10dd950c)
+
 - Hardcoded: `MEM[2] <= 32'h0230A400;`  
 - Standard RISC-V ISA: `0x0030A033`  
 
 ---
 
 #### Instruction 4: OR R9, R2, R5  
+![WhatsApp Image 2024-12-10 at 16 06 55_bc0771b1](https://github.com/user-attachments/assets/00dfedea-222a-4613-9a92-e04ae5730269)
+
 - Hardcoded: `MEM[3] <= 32'h02513480;`  
 - Standard RISC-V ISA: `0x00512033`  
 
 ---
 
 #### Instruction 5: XOR R10, R1, R4  
+![WhatsApp Image 2024-12-10 at 16 06 56_815b24a1](https://github.com/user-attachments/assets/ec9cda52-d1d3-4ebd-b71b-894aba795aed)
+
 - Hardcoded: `MEM[4] <= 32'h0240C500;`  
 - Standard RISC-V ISA: `0x0040C033`  
 
 ---
 
 #### Instruction 6: SLT R11, R2, R4  
+![WhatsApp Image 2024-12-10 at 16 06 56_2e8ede74](https://github.com/user-attachments/assets/bc76799b-3bac-4b5a-ac96-fac5cd71407e)
 - Hardcoded: `MEM[5] <= 32'h02415580;`  
 - Standard RISC-V ISA: `0x00415033`  
 
 ---
 
 #### Instruction 7: ADDI R12, R4, 5  
+![WhatsApp Image 2024-12-10 at 16 06 57_74ac6199](https://github.com/user-attachments/assets/bd40a68d-d0cc-4cb1-8ddc-81f76b9f8f50)
 - Hardcoded: `MEM[6] <= 32'h00520600;`  
 - Standard RISC-V ISA: `0x00520013`  
 
----
 
-#### Instruction 8: SW R3, R1, 2  
-- Hardcoded: `MEM[7] <= 32'h00209181;`  
-- Standard RISC-V ISA: `0x0020A023`  
 
----
+#### Instruction 8: BEQ R0, R0, 15 
+![WhatsApp Image 2024-12-10 at 16 25 02_89a3d534](https://github.com/user-attachments/assets/7333670e-d865-480c-8e97-a33668aa098d)
 
-#### Instruction 9: LW R13, R1, 2  
-- Hardcoded: `MEM[8] <= 32'h00208681;`  
-- Standard RISC-V ISA: `0x0020A003`  
-
----
-
-#### Instruction 10: BEQ R0, R0, 15  
 - Hardcoded: `MEM[9] <= 32'h00F00002;`  
 - Standard RISC-V ISA: `0x00F00063`  
 
----
 
-#### Instruction 11: ADD R14, R2, R2  
-- Hardcoded: `MEM[25] <= 32'h00201700;`  
-- Standard RISC-V ISA: `0x00201033`  
+#### Instruction 9: BNE R0, R1, 20  
+![hd 1](https://github.com/user-attachments/assets/3ddd8a39-3d34-478b-a185-1e144e07ae8c)
 
----
-
-#### Instruction 12: BNE R0, R1, 20  
 - Hardcoded: `MEM[27] <= 32'h01409002;`  
 - Standard RISC-V ISA: `0x01408063`  
 
----
-
-#### Instruction 13: ADDI R12, R4, 5  
-- Hardcoded: `MEM[49] <= 32'h00520601;`  
-- Standard RISC-V ISA: `0x00520013`  
-
----
-
-#### Instruction 14: SLTI R15, R1, 2  
-- Hardcoded: `MEM[50] <= 32'h00207873;`  
-- Standard RISC-V ISA: `0x00207013`  
-
----
 
 #### Instruction 15: SRL R16, R14, R2  
+![hd2 1](https://github.com/user-attachments/assets/796d2b5c-559e-45a1-91cb-6f1f957f732e)
+
 - Hardcoded: `MEM[51] <= 32'h00271803;`  
 - Standard RISC-V ISA: `0x00271033`  
 
