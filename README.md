@@ -1337,10 +1337,10 @@ This project implements a binary (0-9) to 7-segment display decoder using the Vs
 ---
 
 ## Circuit Diagram
-```
+
 ![A](https://github.com/user-attachments/assets/73427e50-bb0f-4ef5-8270-4da9b46eaba0)
 
-```
+
 
 ---
 
