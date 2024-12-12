@@ -1282,6 +1282,79 @@ This section will integrate the commands for running and simulating your Verilog
 
 ---   
 
+</details>
+<details>
+<summary><b>Task 5:</b> binary to 7-segment display decoder implementation using Vsdsquadron-Mini </summary> 
+
+Here’s the updated README content including the details of which segments (`a` to `g`) glow for each number (0-9):
+
+---
+
+# Binary to 7-Segment Display Decoder Using Vsdsquadron-Mini
+
+## Project Overview
+This project implements a binary (0-9) to 7-segment display decoder using the Vsdsquadron-Mini board. The input binary values are provided via push buttons, and the corresponding decimal digit is displayed on a common-anode 7-segment display.
+
+---
+
+## Hardware Setup
+
+### Push Button Inputs
+- **Connections**:
+  - Four push buttons connected to ports `PC0`, `PC1`, `PC2`, and `PC3` on the Vsdsquadron-Mini.
+  - **MSB**: `PC3`, **LSB**: `PC0`.
+  - Push button inputs are connected to the **3.3V supply** pin from the Vsdsquadron-Mini.
+  - Push button grounds are connected to the **GND** pin of the Vsdsquadron-Mini.
+
+### Seven-Segment Display
+- **Type**: Common-Anode
+- **Commons**: Connected to the **3.3V supply** pin from the Vsdsquadron-Mini.
+- **Segment Pin Mapping**:
+  - `A` → `PD1`
+  - `B` → `PD2`
+  - `C` → `PD3`
+  - `D` → `PD4`
+  - `E` → `PD5`
+  - `F` → `PD6`
+  - `G` → `PD7`
+
+---
+
+## LED Segment States for Numbers
+| **Number** | **Segments Glowing** | **Binary Input (PC3-PC0)** |
+|------------|-----------------------|----------------------------|
+| 0          | a, b, c, d, e, f     | 0000                       |
+| 1          | b, c                 | 0001                       |
+| 2          | a, b, g, e, d        | 0010                       |
+| 3          | a, b, g, c, d        | 0011                       |
+| 4          | f, g, b, c           | 0100                       |
+| 5          | a, f, g, c, d        | 0101                       |
+| 6          | a, f, g, e, c, d     | 0110                       |
+| 7          | a, b, c              | 0111                       |
+| 8          | a, b, c, d, e, f, g  | 1000                       |
+| 9          | a, b, c, d, f, g     | 1001                       |
+
+---
+
+## Circuit Diagram
+```
+![A](https://github.com/user-attachments/assets/73427e50-bb0f-4ef5-8270-4da9b46eaba0)
+
+```
+
+---
+
+## Functionality
+- The circuit decodes binary inputs from the push buttons and drives the 7-segment display to show digits `0-9`.
+- Push button inputs represent a **4-bit binary number**:
+  - `0000` = `0`, `0001` = `1`, ..., `1001` = `9`.
+- Invalid inputs (`1010` to `1111`) are not displayed.
+
+---
+
+
+
+
 
 
 
