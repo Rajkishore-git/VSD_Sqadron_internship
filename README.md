@@ -1298,6 +1298,15 @@ This project implements a binary (0-9) to 7-segment display decoder using the Vs
 ---
 
 ## Hardware Setup
+### Components Required
+
+- **VSD Squadron Mini Microcontroller**  
+- **4.7 kΩ Resistors**  
+- **Breadboard**  
+- **7-Segment Display (Common Cathode)**  
+- **4 Push Buttons**  
+- **Connecting Wires**  
+- **3.3V Power Supply**
 
 ### Push Button Inputs
 - **Connections**:
@@ -1310,13 +1319,13 @@ This project implements a binary (0-9) to 7-segment display decoder using the Vs
 - **Type**: Common-Anode
 - **Commons**: Connected to the **3.3V supply** pin from the Vsdsquadron-Mini.
 - **Segment Pin Mapping**:
-  - `A` → `PD1`
+  - `A` → `PC4`
   - `B` → `PD2`
   - `C` → `PD3`
   - `D` → `PD4`
   - `E` → `PD5`
   - `F` → `PD6`
-  - `G` → `PD7`
+  - `G` → `PC5`
 
 ---
 
@@ -1486,7 +1495,8 @@ void Custom_Delay_Ms(uint32_t ms)
 ```
 ---
 ## Video link
-.[click hear].(https://drive.google.com/file/d/1nke861P1vlEcE5wyuMgBgh0vID1Q3gkU/view?usp=drive_link)
+[Click here](https://drive.google.com/file/d/1nke861P1vlEcE5wyuMgBgh0vID1Q3gkU/view?usp=drive_link)
+
 
 
 
