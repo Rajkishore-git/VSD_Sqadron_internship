@@ -1351,7 +1351,142 @@ This project implements a binary (0-9) to 7-segment display decoder using the Vs
 - Invalid inputs (`1010` to `1111`) are not displayed.
 
 ---
+## Code 
+```
+#include <ch32v00x.h>
 
+// Segment definitions
+#define SEG_A GPIO_Pin_4   // PC4
+#define SEG_B GPIO_Pin_2   // PD2
+#define SEG_C GPIO_Pin_3   // PD3
+#define SEG_D GPIO_Pin_4   // PD4
+#define SEG_E GPIO_Pin_5   // PD5
+#define SEG_F GPIO_Pin_6   // PD6
+#define SEG_G GPIO_Pin_5   // PC5
+
+// Port definitions
+#define SEG_PORT_D GPIOD   // Port for segments B, C, D, E, F
+#define SEG_PORT_C GPIOC   // Port for segments A and G
+#define BUTTON_PORT GPIOC  // Port for BCD inputs
+#define BCD_MASK (GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3)
+
+// Function prototypes
+void GPIO_Config(void);
+void Display_7Seg(uint8_t num);
+void Custom_Delay_Ms(uint32_t ms);
+
+int main(void)
+{
+    SystemInit();      // System initialization
+    GPIO_Config();     // Configure GPIO for 7-segment display and buttons
+
+    while (1)
+    {
+        uint8_t bcd_input = GPIO_ReadInputData(BUTTON_PORT) & BCD_MASK;
+
+        // Map BCD inputs to corresponding decimal numbers (0-9)
+        uint8_t digit = 0;
+        if (bcd_input <= 9)  // Valid BCD values range from 0 to 9
+        {
+            digit = bcd_input;
+        }
+
+        Display_7Seg(digit);  // Display the digit on the 7-segment display
+        Custom_Delay_Ms(200); // Small delay to debounce and stabilize
+    }
+}
+
+void GPIO_Config(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+
+    // Enable clocks for GPIOD and GPIOC
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD | RCC_APB2Periph_GPIOC, ENABLE);
+
+    // Configure 7-segment display pins (GPIOD: B, C, D, E, F)
+    GPIO_InitStructure.GPIO_Pin = SEG_B | SEG_C | SEG_D | SEG_E | SEG_F;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  // Push-pull output
+    GPIO_Init(SEG_PORT_D, &GPIO_InitStructure);
+
+    // Configure 7-segment display pins (GPIOC: A, G)
+    GPIO_InitStructure.GPIO_Pin = SEG_A | SEG_G;
+    GPIO_Init(SEG_PORT_C, &GPIO_InitStructure);
+
+    // Configure BCD input pins (PC0 - PC3) as input with pull-down resistors
+    GPIO_InitStructure.GPIO_Pin = BCD_MASK;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;  // Input with pull-down
+    GPIO_Init(BUTTON_PORT, &GPIO_InitStructure);
+}
+
+void Display_7Seg(uint8_t num)
+{
+    // Turn off all segments
+    GPIO_ResetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_D | SEG_E | SEG_F);
+    GPIO_ResetBits(SEG_PORT_C, SEG_A | SEG_G);
+
+    // Activate segments based on the BCD digit
+    switch (num)
+    {
+        case 0:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_D | SEG_E | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_A);  // A
+            break;
+        case 1:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C);
+            break;
+        case 2:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_D | SEG_E);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        case 3:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_D);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        case 4:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_G);  // G
+            break;
+        case 5:
+            GPIO_SetBits(SEG_PORT_D, SEG_C | SEG_D | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        case 6:
+            GPIO_SetBits(SEG_PORT_D, SEG_C | SEG_D | SEG_E | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        case 7:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C);
+            GPIO_SetBits(SEG_PORT_C, SEG_A);  // A
+            break;
+        case 8:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_D | SEG_E | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        case 9:
+            GPIO_SetBits(SEG_PORT_D, SEG_B | SEG_C | SEG_D | SEG_F);
+            GPIO_SetBits(SEG_PORT_C, SEG_A | SEG_G);  // A, G
+            break;
+        default:
+            break;
+    }
+}
+
+void Custom_Delay_Ms(uint32_t ms)
+{
+    uint32_t i, j;
+    for (i = 0; i < ms; i++)
+    {
+        for (j = 0; j < 1200; j++)  // Approximate delay loop
+        {
+            __NOP();
+        }
+    }
+}
+```
+---
+## Video link
+[click hear].(https://drive.google.com/file/d/1nke861P1vlEcE5wyuMgBgh0vID1Q3gkU/view?usp=drive_link)
 
 
 
