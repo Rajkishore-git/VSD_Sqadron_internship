@@ -1486,7 +1486,7 @@ void Custom_Delay_Ms(uint32_t ms)
 ```
 ---
 ## Video link
-[click hear].(https://drive.google.com/file/d/1nke861P1vlEcE5wyuMgBgh0vID1Q3gkU/view?usp=drive_link)
+.[click hear].(https://drive.google.com/file/d/1nke861P1vlEcE5wyuMgBgh0vID1Q3gkU/view?usp=drive_link)
 
 
 
